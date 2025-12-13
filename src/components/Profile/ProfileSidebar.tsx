@@ -10,7 +10,7 @@ const ProfileSidebar: React.FC = () => {
       <div className="absolute top-0 inset-x-0 h-48 bg-[#181818] z-50 flex flex-col items-center justify-center gap-y-4 shadow-md">
         <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-emerald-500">
           <img
-            src="/defaultProfileImage.svg"
+            src="/images/common/myavatar.jpg"
             alt="Profile"
             className="w-full h-full object-cover"
             onError={(e) => {
