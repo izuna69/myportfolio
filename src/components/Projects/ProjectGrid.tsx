@@ -40,7 +40,7 @@ const ProjectGrid: React.FC = () => {
 
       {/* Footer Text */}
       <div className="mt-12 text-center text-gray-500 text-sm">
-        © 2025 All Rights Reserved. Made with ❤️
+        © 2025 All Rights Reserved. IZUNA
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ const App: React.FC = () => {
     <div
       className="h-screen lg:p-[0.8rem] flex flex-col font-sans select-none bg-fixed"
       style={{
-        backgroundImage: "url('/images/background.png')",
+        backgroundImage: "url('/images/common/background.png')",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
       }}

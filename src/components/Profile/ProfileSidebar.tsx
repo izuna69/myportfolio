@@ -1,7 +1,7 @@
 import React from "react";
 import { PROFILE_DATA } from "../../data/stacks/constants";
 import { LanguageChart, TechStackChart } from "./SkillCharts";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaDiscord } from "react-icons/fa";
 
 const ProfileSidebar: React.FC = () => {
   return (
@@ -99,12 +99,12 @@ const ProfileSidebar: React.FC = () => {
           <FaGithub />
         </a>
         <a
-          href={PROFILE_DATA.social.linkedin}
+          href={PROFILE_DATA.social.discord}
           target="_blank"
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-white transition-colors"
         >
-          <FaLinkedin />
+          <FaDiscord />
         </a>
       </div>
     </aside>
