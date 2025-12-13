@@ -4,7 +4,7 @@ export const PROJECT_LIST = [
     title: "Weather App",
     description:
       "Weather App is a mobile application that provides real-time weather information for any location in the South Korea.",
-    image: "../public/images/project/weather.jpg", // Ensure this path exists or put placeholder
+    image: "/images/project/weather.jpg", // Ensure this path exists or put placeholder
     stack: ["Flutter", "Dart", "API"],
     links: {
       demo: "google.com",
@@ -16,7 +16,7 @@ export const PROJECT_LIST = [
     title: "Job Search Platform",
     description:
       "Job search platform that helps users find job opportunities in South Korea.",
-    image: "../public/images/project/gila.png",
+    image: "/images/project/gila.png",
     stack: ["ReactJS", "Spring Boot", "Redis", "MySQL"],
     links: {
       demo: "#",
