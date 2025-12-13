@@ -20,7 +20,19 @@ export const PROJECT_LIST = [
     stack: ["ReactJS", "Spring Boot", "Redis", "MySQL"],
     links: {
       demo: "#",
-      github: "#",
+      github: "https://github.com/Jimin2123/RoadMap_front.git",
+    },
+  },
+  {
+    id: 3,
+    title: "discord bot",
+    description:
+      "It’s a bot on Discord that can play music and delete multiple messages.",
+    image: "/images/project/discordbot.png",
+    stack: ["python", "discord", "youtube-dl"],
+    links: {
+      demo: "#",
+      github: "https://github.com/izuna69/izuna.git",
     },
   },
 ];
