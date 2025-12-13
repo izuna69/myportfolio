@@ -6,7 +6,7 @@ import { PROFILE_DATA } from "../../data/stacks/constants";
 export const LanguageChart: React.FC = () => {
   return (
     <div className="flex justify-around items-center py-4">
-      {PROFILE_DATA.languages.map((lang, index) => {
+      {PROFILE_DATA.languages.map((lang) => {
         const option = {
           tooltip: { show: false },
           series: [
