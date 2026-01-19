@@ -35,4 +35,27 @@ export const PROJECT_LIST = [
       github: "https://github.com/izuna69/izuna.git",
     },
   },
+  {
+    id: 4,
+    title: "map code",
+    description:
+      "An app that returns a map code for that address when you enter a Japanese address",
+    image: "/images/project/mapcode.png",
+    stack: ["dart", "flutter", "googlecloudmaps"],
+    links: {
+      demo: "#",
+      github: "https://github.com/izuna69/googlemaps",
+    },
+  },
+  {
+    id: 5,
+    title: "reminder",
+    description: "this is a reminder app",
+    image: "/images/project/reminder.png",
+    stack: ["dart", "flutter"],
+    links: {
+      demo: "#",
+      github: "https://github.com/izuna69/reminder",
+    },
+  },
 ];
