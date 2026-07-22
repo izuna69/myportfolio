@@ -1,13 +1,14 @@
 import React from "react";
-import { PROJECT_LIST } from "../../data/project_list/projects_list";
 import ProjectCard from "./ProjectCard";
 import { motion } from "framer-motion";
+import { useLanguage } from "../../context/LanguageContext";
 
 const ProjectGrid: React.FC = () => {
+  const { t } = useLanguage();
   return (
     <section className="p-6 md:p-10 w-full overflow-y-auto">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2">Projects</h2>
+        <h2 className="text-3xl font-bold text-white mb-2">{t.labels.projectsTitle}</h2>
       </div>
 
       <motion.div
@@ -24,7 +25,7 @@ const ProjectGrid: React.FC = () => {
           },
         }}
       >
-        {PROJECT_LIST.map((project) => (
+        {t.projects.map((project) => (
           <motion.div
             key={project.id}
             variants={{
@@ -40,7 +41,7 @@ const ProjectGrid: React.FC = () => {
 
       {/* Footer Text */}
       <div className="mt-12 text-center text-gray-500 text-sm">
-        © 2025 All Rights Reserved. IZUNA
+        {t.labels.footer}
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import ProfileSidebar from "./components/Profile/ProfileSidebar";
 import ProjectGrid from "./components/Projects/ProjectGrid";
+import LanguageSwitcher from "./components/LanguageSwitcher";
 
 const App: React.FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: React.FC = () => {
 
         {/* Right Content Container */}
         <main className="flex-1 h-full overflow-y-auto relative scroll-smooth bg-[#121212] rounded-xl shadow-2xl shadow-emerald-500/10 no-scrollbar">
+          <LanguageSwitcher />
           <ProjectGrid />
         </main>
       </div>

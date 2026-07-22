@@ -1,12 +1,22 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
-import { PROFILE_DATA } from "../../data/stacks/constants";
+
+interface LanguageData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface SkillData {
+  name: string;
+  value: number;
+}
 
 // Ring Chart for Languages
-export const LanguageChart: React.FC = () => {
+export const LanguageChart: React.FC<{ data: LanguageData[] }> = ({ data }) => {
   return (
     <div className="flex justify-around items-center py-4">
-      {PROFILE_DATA.languages.map((lang) => {
+      {data.map((lang) => {
         const option = {
           tooltip: { show: false },
           series: [
@@ -53,10 +63,10 @@ export const LanguageChart: React.FC = () => {
 };
 
 // Custom Progress Bar for Skills (Replacing Echarts)
-export const TechStackChart: React.FC = () => {
+export const TechStackChart: React.FC<{ data: SkillData[] }> = ({ data }) => {
   return (
     <div className="flex flex-col gap-4">
-      {PROFILE_DATA.skills.map((skill) => (
+      {data.map((skill) => (
         <div key={skill.name}>
           <div className="flex justify-between mb-1 text-sm text-gray-300">
             <span>{skill.name}</span>
