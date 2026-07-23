@@ -31,7 +31,7 @@ const translations: Record<Language, Translations> = {
       expertise: "Expertise",
       tools: "Tools",
       projectsTitle: "Projects",
-      footer: "© 2025 All Rights Reserved. IZUNA"
+      footer: "©2026 All Rights Reserved. Rama"
     }
   },
   ja: {
