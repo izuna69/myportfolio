@@ -4,13 +4,17 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../../context/LanguageContext";
 import { projectApi, type ProjectDto } from "../../api/projectApi";
 import ProjectUploadModal from "./ProjectUploadModal";
+import LoginModal from "../LoginModal";
 
 const ProjectGrid: React.FC = () => {
   const { t, language } = useLanguage();
   const [projects, setProjects] = useState<ProjectDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [projectToEdit, setProjectToEdit] = useState<ProjectDto | null>(null);
+
+  const isAdmin = !!sessionStorage.getItem('adminToken');
 
   const fetchProjects = async () => {
     try {
@@ -37,15 +41,17 @@ const ProjectGrid: React.FC = () => {
             {language === 'en' ? 'My latest works and experiments.' : '最近の作品と実験プロジェクト。'}
           </p>
         </div>
-        <button
-          onClick={() => {
-            setProjectToEdit(null);
-            setIsModalOpen(true);
-          }}
-          className="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-600/50 rounded transition-colors"
-        >
-          + Add Project
-        </button>
+        {isAdmin && (
+          <button
+            onClick={() => {
+              setProjectToEdit(null);
+              setIsModalOpen(true);
+            }}
+            className="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-600/50 rounded transition-colors"
+          >
+            + Add Project
+          </button>
+        )}
       </div>
 
       {isLoading ? (
@@ -55,9 +61,11 @@ const ProjectGrid: React.FC = () => {
       ) : projects.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 text-gray-500 border border-dashed border-gray-800 rounded-xl">
           <p className="mb-4">No projects found.</p>
-          <button onClick={() => { setProjectToEdit(null); setIsModalOpen(true); }} className="text-emerald-500 hover:underline">
-            Be the first to add one!
-          </button>
+          {isAdmin && (
+            <button onClick={() => { setProjectToEdit(null); setIsModalOpen(true); }} className="text-emerald-500 hover:underline">
+              Be the first to add one!
+            </button>
+          )}
         </div>
       ) : (
         <motion.div
@@ -99,14 +107,14 @@ const ProjectGrid: React.FC = () => {
               >
                 <ProjectCard 
                   {...mappedProject} 
-                  onEdit={(id) => {
+                  onEdit={isAdmin ? (id) => {
                     const proj = projects.find((p) => p.id === id);
                     if (proj) {
                       setProjectToEdit(proj);
                       setIsModalOpen(true);
                     }
-                  }}
-                  onDelete={async (id) => {
+                  } : undefined}
+                  onDelete={isAdmin ? async (id) => {
                     if (window.confirm("정말 이 프로젝트를 삭제하시겠습니까?")) {
                       try {
                         await projectApi.deleteProject(id);
@@ -116,7 +124,7 @@ const ProjectGrid: React.FC = () => {
                         alert("삭제에 실패했습니다.");
                       }
                     }
-                  }}
+                  } : undefined}
                 />
               </motion.div>
             );
@@ -125,8 +133,17 @@ const ProjectGrid: React.FC = () => {
       )}
 
       {/* Footer Text */}
-      <div className="mt-12 text-center text-gray-500 text-sm">
+      <div className="mt-12 flex justify-center items-center gap-2 text-gray-500 text-sm">
         {t.labels.footer}
+        {isAdmin ? (
+          <button onClick={() => { sessionStorage.removeItem('adminToken'); window.location.reload(); }} className="hover:text-red-400" title="Logout">
+            🔓
+          </button>
+        ) : (
+          <button onClick={() => setIsLoginModalOpen(true)} className="hover:text-emerald-400" title="Admin Login">
+            🔒
+          </button>
+        )}
       </div>
 
       <ProjectUploadModal 
@@ -139,6 +156,15 @@ const ProjectGrid: React.FC = () => {
           fetchProjects(); // Refresh the list after successful upload
         }}
         initialData={projectToEdit}
+      />
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onSuccess={() => {
+          // Force a re-render or just let state update via reloading or component state
+          window.location.reload();
+        }}
       />
     </section>
   );

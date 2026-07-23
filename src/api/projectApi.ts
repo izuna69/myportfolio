@@ -14,9 +14,20 @@ export interface ProjectDto {
   stacks: string[];
 }
 
+const getAuthHeaders = () => {
+  const token = sessionStorage.getItem('adminToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export const projectApi = {
   getAllProjects: async (): Promise<ProjectDto[]> => {
     const response = await axios.get<ProjectDto[]>(API_BASE_URL);
+    return response.data;
+  },
+
+  login: async (username: string, password: string): Promise<{ token: string; message: string }> => {
+    const authUrl = API_BASE_URL.replace('/projects', '/auth/login');
+    const response = await axios.post(authUrl, { username, password });
     return response.data;
   },
 
@@ -33,6 +44,7 @@ export const projectApi = {
     const response = await axios.post<ProjectDto>(API_BASE_URL, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        ...getAuthHeaders(),
       },
     });
     return response.data;
@@ -50,13 +62,16 @@ export const projectApi = {
     const response = await axios.put<ProjectDto>(`${API_BASE_URL}/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        ...getAuthHeaders(),
       },
     });
     return response.data;
   },
 
   deleteProject: async (id: number): Promise<void> => {
-    const response = await axios.delete(`${API_BASE_URL}/${id}`);
+    const response = await axios.delete(`${API_BASE_URL}/${id}`, {
+      headers: getAuthHeaders(),
+    });
     return response.data;
   }
 };
