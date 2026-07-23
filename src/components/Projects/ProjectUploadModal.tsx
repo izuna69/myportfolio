@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { projectApi, type ProjectDto } from '../../api/projectApi';
 
@@ -6,9 +6,12 @@ interface ProjectUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  initialData?: ProjectDto | null;
 }
 
-const ProjectUploadModal: React.FC<ProjectUploadModalProps> = ({ isOpen, onClose, onSuccess }) => {
+const ProjectUploadModal: React.FC<ProjectUploadModalProps> = ({ isOpen, onClose, onSuccess, initialData }) => {
+  const isEditMode = !!initialData;
+
   const [formData, setFormData] = useState<ProjectDto>({
     titleEn: '',
     titleJa: '',
@@ -23,11 +26,41 @@ const ProjectUploadModal: React.FC<ProjectUploadModalProps> = ({ isOpen, onClose
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        setFormData({
+          titleEn: initialData.titleEn,
+          titleJa: initialData.titleJa,
+          descriptionEn: initialData.descriptionEn,
+          descriptionJa: initialData.descriptionJa,
+          demoLink: initialData.demoLink || '',
+          githubLink: initialData.githubLink || '',
+          stacks: initialData.stacks
+        });
+        setStacksInput(initialData.stacks.join(', '));
+      } else {
+        setFormData({
+          titleEn: '',
+          titleJa: '',
+          descriptionEn: '',
+          descriptionJa: '',
+          demoLink: '',
+          githubLink: '',
+          stacks: []
+        });
+        setStacksInput('');
+      }
+      setImageFile(null);
+      setError('');
+    }
+  }, [isOpen, initialData]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!imageFile) {
+    if (!isEditMode && !imageFile) {
       setError('Please select an image file.');
       return;
     }
@@ -41,12 +74,17 @@ const ProjectUploadModal: React.FC<ProjectUploadModalProps> = ({ isOpen, onClose
         stacks: stacksInput.split(',').map(s => s.trim()).filter(s => s.length > 0)
       };
 
-      await projectApi.createProject(submitData, imageFile);
+      if (isEditMode && initialData?.id) {
+        await projectApi.updateProject(initialData.id, submitData, imageFile || undefined);
+      } else {
+        await projectApi.createProject(submitData, imageFile!);
+      }
+      
       onSuccess();
       onClose();
     } catch (err: any) {
       console.error(err);
-      setError('Failed to upload project. Check console for details.');
+      setError('Failed to save project. Check console for details.');
     } finally {
       setIsSubmitting(false);
     }
@@ -67,7 +105,7 @@ const ProjectUploadModal: React.FC<ProjectUploadModalProps> = ({ isOpen, onClose
           className="bg-[#1e1e1e] rounded-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-700"
         >
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-white">Add New Project</h2>
+            <h2 className="text-2xl font-bold text-white">{isEditMode ? 'Edit Project' : 'Add New Project'}</h2>
             <button onClick={onClose} className="text-gray-400 hover:text-white text-xl">&times;</button>
           </div>
 
@@ -113,14 +151,14 @@ const ProjectUploadModal: React.FC<ProjectUploadModalProps> = ({ isOpen, onClose
             </div>
 
             <div>
-              <label className="block mb-1 text-gray-400">Thumbnail Image *</label>
-              <input required type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} className="w-full bg-[#121212] border border-gray-700 rounded p-2 text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:bg-emerald-600 file:text-white hover:file:bg-emerald-500" />
+              <label className="block mb-1 text-gray-400">Thumbnail Image {!isEditMode && '*'}</label>
+              <input required={!isEditMode} type="file" accept="image/*" onChange={(e) => setImageFile(e.target.files?.[0] || null)} className="w-full bg-[#121212] border border-gray-700 rounded p-2 text-gray-400 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:bg-emerald-600 file:text-white hover:file:bg-emerald-500" />
             </div>
 
             <div className="pt-4 flex justify-end gap-3">
               <button type="button" onClick={onClose} className="px-4 py-2 rounded text-gray-400 hover:bg-gray-800">Cancel</button>
               <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded disabled:opacity-50 flex items-center gap-2">
-                {isSubmitting ? 'Uploading...' : 'Add Project'}
+                {isSubmitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Add Project')}
               </button>
             </div>
           </form>

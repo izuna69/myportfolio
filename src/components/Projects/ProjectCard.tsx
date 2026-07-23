@@ -12,14 +12,19 @@ interface ProjectProps {
     demo?: string;
     github?: string;
   };
+  onEdit?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 const ProjectCard: React.FC<ProjectProps> = ({
+  id,
   title,
   description,
   image,
   stack,
   links,
+  onEdit,
+  onDelete,
 }) => {
   return (
     <motion.div
@@ -43,6 +48,29 @@ const ProjectCard: React.FC<ProjectProps> = ({
               "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect fill='%23374151' width='400' height='200'/%3E%3Ctext fill='%239CA3AF' font-family='sans-serif' font-size='30' dy='10.5' font-weight='bold' x='50%25' y='50%25' text-anchor='middle'%3EProject Image%3C/text%3E%3C/svg%3E";
           }}
         />
+        
+        {/* Edit/Delete Actions */}
+        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+          {onEdit && (
+            <button 
+              onClick={(e) => { e.stopPropagation(); onEdit(id); }} 
+              className="p-2 bg-black/60 rounded-full hover:bg-emerald-600 text-white shadow-lg backdrop-blur-sm"
+              title="Edit Project"
+            >
+              ✏️
+            </button>
+          )}
+          {onDelete && (
+            <button 
+              onClick={(e) => { e.stopPropagation(); onDelete(id); }} 
+              className="p-2 bg-black/60 rounded-full hover:bg-red-600 text-white shadow-lg backdrop-blur-sm"
+              title="Delete Project"
+            >
+              🗑️
+            </button>
+          )}
+        </div>
+
         {/* Overlay on hover (optional, but nice) */}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
           {links.demo && (

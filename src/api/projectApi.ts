@@ -23,10 +23,10 @@ export const projectApi = {
   createProject: async (projectData: ProjectDto, imageFile: File): Promise<ProjectDto> => {
     const formData = new FormData();
     formData.append('image', imageFile);
-    
+
     // Spring Boot expects JSON string for 'requestDto' part
     formData.append(
-      'requestDto', 
+      'requestDto',
       new Blob([JSON.stringify(projectData)], { type: 'application/json' })
     );
 
@@ -35,6 +35,28 @@ export const projectApi = {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return response.data;
+  },
+
+  updateProject: async (id: number, projectData: ProjectDto, imageFile?: File): Promise<ProjectDto> => {
+    const formData = new FormData();
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    formData.append('requestDto', new Blob([JSON.stringify(projectData)], {
+      type: 'application/json'
+    }));
+
+    const response = await axios.put<ProjectDto>(`${API_BASE_URL}/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  deleteProject: async (id: number): Promise<void> => {
+    const response = await axios.delete(`${API_BASE_URL}/${id}`);
     return response.data;
   }
 };

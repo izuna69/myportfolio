@@ -10,6 +10,7 @@ const ProjectGrid: React.FC = () => {
   const [projects, setProjects] = useState<ProjectDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [projectToEdit, setProjectToEdit] = useState<ProjectDto | null>(null);
 
   const fetchProjects = async () => {
     try {
@@ -37,7 +38,10 @@ const ProjectGrid: React.FC = () => {
           </p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setProjectToEdit(null);
+            setIsModalOpen(true);
+          }}
           className="px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 border border-emerald-600/50 rounded transition-colors"
         >
           + Add Project
@@ -51,7 +55,7 @@ const ProjectGrid: React.FC = () => {
       ) : projects.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 text-gray-500 border border-dashed border-gray-800 rounded-xl">
           <p className="mb-4">No projects found.</p>
-          <button onClick={() => setIsModalOpen(true)} className="text-emerald-500 hover:underline">
+          <button onClick={() => { setProjectToEdit(null); setIsModalOpen(true); }} className="text-emerald-500 hover:underline">
             Be the first to add one!
           </button>
         </div>
@@ -93,7 +97,27 @@ const ProjectGrid: React.FC = () => {
                 }}
                 className="h-full"
               >
-                <ProjectCard {...mappedProject} />
+                <ProjectCard 
+                  {...mappedProject} 
+                  onEdit={(id) => {
+                    const proj = projects.find((p) => p.id === id);
+                    if (proj) {
+                      setProjectToEdit(proj);
+                      setIsModalOpen(true);
+                    }
+                  }}
+                  onDelete={async (id) => {
+                    if (window.confirm("정말 이 프로젝트를 삭제하시겠습니까?")) {
+                      try {
+                        await projectApi.deleteProject(id);
+                        fetchProjects();
+                      } catch (err) {
+                        console.error("Failed to delete project:", err);
+                        alert("삭제에 실패했습니다.");
+                      }
+                    }
+                  }}
+                />
               </motion.div>
             );
           })}
@@ -107,10 +131,14 @@ const ProjectGrid: React.FC = () => {
 
       <ProjectUploadModal 
         isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        onClose={() => {
+          setIsModalOpen(false);
+          setProjectToEdit(null);
+        }} 
         onSuccess={() => {
           fetchProjects(); // Refresh the list after successful upload
-        }} 
+        }}
+        initialData={projectToEdit}
       />
     </section>
   );
