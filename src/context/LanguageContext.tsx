@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, type ReactNode } from 'react';
 import { PROFILE_DATA as profileEn, PROFILE_DATA_JA as profileJa } from '../data/stacks/constants';
 import { PROJECT_LIST as projectsEn, PROJECT_LIST_JA as projectsJa } from '../data/project_list/projects_list';
 
