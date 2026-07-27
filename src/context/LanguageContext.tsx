@@ -45,7 +45,7 @@ const translations: Record<Language, Translations> = {
       expertise: "専門知識",
       tools: "ツール",
       projectsTitle: "プロジェクト",
-      footer: "© 2025 無断転載禁止. IZUNA"
+      footer: "© 2026 無断転載禁止. Rama"
     }
   }
 };

@@ -115,13 +115,13 @@ const ProjectGrid: React.FC = () => {
                     }
                   } : undefined}
                   onDelete={isAdmin ? async (id) => {
-                    if (window.confirm("정말 이 프로젝트를 삭제하시겠습니까?")) {
+                    if (window.confirm("本当に削除しますか？")) {
                       try {
                         await projectApi.deleteProject(id);
                         fetchProjects();
                       } catch (err) {
                         console.error("Failed to delete project:", err);
-                        alert("삭제에 실패했습니다.");
+                        alert("削除に失敗しました。");
                       }
                     }
                   } : undefined}
